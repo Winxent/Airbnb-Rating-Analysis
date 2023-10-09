@@ -32,6 +32,9 @@ Raw Datasets:https://docs.google.com/spreadsheets/d/1O0iTVeiRXVc0ocy3vAIMzvwDGt5
 
 # Data Cleaning using Google BigQuery
 The below checklist is done for data cleaning using google BigQuery:
+* Dataset: airbnb
+* Naming our table: rating
+
 ##### A – Remove duplicate rows
 1. By typing the below quote in the query statement we can find how many rows we have.
 ```
@@ -85,6 +88,31 @@ or Review_Scores_Rating is null
 8454 rows have null values
 Other columns have no null values
 
+1. Host_since and property_type is an important data for comparison, any missing value will be drop.
+```
+DELETE FROM airbnb.rating
+WHERE host_since IS NULL;
+```
+```
+DELETE FROM airbnb.rating
+WHERE Property_Type IS NULL;
+```
+2. Missing value on review rating should be remove in order for us to do analysis
+```
+DELETE FROM airbnb.rating
+WHERE Review_Scores_Rating IS NULL;
+```
+3. Missing  value for beds will be replace with 0 (impute)
+```
+update airbnb.rating
+set beds = 0
+where beds is null
+```
+4. Missing values for zipcode will be deleted to prevent data being unable to compared
+```
+DELETE FROM airbnb.rating
+WHERE zipcode IS NULL;
+```
 
 ##### C – Correct data formats
 Change run_date to date time data type, others no issue
