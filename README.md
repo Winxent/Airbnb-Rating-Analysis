@@ -253,6 +253,7 @@ select avg(beds) as Mean_Beds, avg(number_of_Reviews) as Mean_number_of_reviews,
 avg(review_scores_rating) as Mean_review_scores_Rating from airbnb.rating3;
 ```
 <img width="683" alt="image25" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9608cc93-fb31-40db-b143-b670d683b805">
+
 Average price $155
 Average rating 92*
 
@@ -263,6 +264,7 @@ PERCENTILE_CONT(Price,0.5) OVER() AS median_price, PERCENTILE_CONT(Review_Scores
 from airbnb.rating3 limit 1;
 ```
 <img width="683" alt="image25" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/555dabb4-3bc6-4c72-a949-45fa7c3b97aa">
+
 Median price $125
 Median rating 94*
 
@@ -274,6 +276,7 @@ APPROX_TOP_COUNT(price,1) AS mode_price, APPROX_TOP_COUNT(Review_Scores_Rating,1
 from airbnb.rating3 limit 1
 ```
 <img width="970" alt="image10" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/b079d84a-9d27-45b9-855e-cf78069fd448">
+
 Most of the Airbnb has only 1 bed with only 1 review.
 Majority of Airbnb the price is $150.
 Majority of Airbnb the rating is 100 perfect score.
@@ -285,6 +288,7 @@ STDDEV(review_scores_rating) AS standard_deviation_review_scores_rating
 FROM airbnb.rating3;
 ```
 <img width="328" alt="image6" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/211307e7-816a-4029-b19d-71a0cbd4473c">
+
 Low deviation
 
 ### 5. Creating temp tables with grouped information
@@ -298,6 +302,7 @@ airbnb.rating3 group by Property_Type);
 select * from airbnb.groupby_property_type order by review_Scores_rating;
 ```
 <img width="292" alt="image13" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/3e1b9a16-73ba-4e7c-9243-9c4dc21ac41f">
+
 Premium property type has higher rating and lower budget property has lower rating
 
 #### Neighbour:
@@ -310,6 +315,7 @@ airbnb.rating3 group by Neighbourhood);
 select * from airbnb.groupby_neighbourhood order by review_Scores_rating;
 ```
 <img width="387" alt="image20" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/a37df7bd-abe5-42f4-9b8e-42cbadb63d4e">
+
 Bronx > Brooklyn > Manhattan > Queens > Staten Island
 
 #### Year:
@@ -321,6 +327,7 @@ FROM airbnb.rating3
 GROUP BY EXTRACT(year FROM host_since);
 ```
 <img width="310" alt="image7" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9c0dc8b8-51a4-46db-8771-ae48b86e5624">
+
 The longer the hosted period the higher the rating as host becomes more experienced.
 
 #### Room Type:
@@ -330,6 +337,7 @@ from airbnb.rating3
 group by (Room_Type);
 ```
 <img width="347" alt="image1" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/d3d02fe1-e045-454b-9945-fbb30ea436c3">
+
 Entire house > Private room > Share room, Entire house brings more freedoom, space and privacy to customer hence it has a highest rating, follow up private room and shared room with the lowest rating with no privacy and less space.
 
 ### 6. Making quartiles by review_scores_rating
@@ -353,6 +361,7 @@ select (q1_review_scores_rating - (1.5 * IQR.IQR)) as minimum, (q3_review_scores
 select * from airbnb.rating3 where Review_Scores_Rating > 116.5 or Review_Scores_Rating < 72.5;
 ```
 ![image16](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9bd9c18f-3445-4fcc-a253-1cddf066a82a)
+
 667 outliers
 
 ## Data Analysis Summary
@@ -361,6 +370,30 @@ Base on airbnb review score rating’s mean median mode and quartile, there is a
 From the few group by the information table, a few insights can be made.  Higher premium property chalet, castle and lighthouse have  a higher rating than the budget properties like camper and dorm. Host that has a longer serving period are also able to accumulate better review rating than others as they gain more hosting experience. 
 
 ![rainbow](https://github.com/Winxent/portfolio/assets/146320825/5dc438d2-e138-4db0-97a0-e5ae8c3473e8)
+
+# Data Visualisation (Dashboard:Tableau)
+A data story is created through Tableau using this dataset:
+https://public.tableau.com/views/Airbnb_16968613964850/Story1?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link
+
+## Overview:
+First page shows the overview of the datasets. Size, shape and average or the data for customer to understand the data range.
+
+<img width="671" alt="image12" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/60d909ff-4d7d-4be8-b637-2eb58d6ca3d7">
+
+## Comparison:
+Second page shows the stats of the rating, price and count of the Airbnb base on Neighbourhood, Property Type, Room Types and host year for customer to make comparison. 
+
+<img width="659" alt="image27" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/b3621f13-c6d0-4d2a-9d08-be5c95ed8de5">
+
+# Conclusion:
+From the data analysis, we found out that the number of hosted year provides experince to the host hence they manage to achieve higher rating. Furthermore, entire house and private rooms has better rating as compare to shared room. Staying with strangers that is not compatible might be one of the reason for the low rating. Premium properties type like castle and chalets have higher rating as compare to budget property like campter and dorm. Better services and comfortable properties contribute to the statisfactory of customers. 
+
+Using interactive visual dashboard, we can sort prices and rating and compare the prefered property based on budget, locations, area, and property types as well as room types. By combining data analysis and data visualisation, Airbnb customer can make their decision better to get the most out of the system.
+
+
+<img width="787" alt="image" src="https://github.com/Winxent/Analysis-on-Students-Performance-in-an-Admission-test/assets/146320825/12c75db7-f6b9-4878-b914-08601d4ab821">
+
+
 
 
 
