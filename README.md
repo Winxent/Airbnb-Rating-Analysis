@@ -30,6 +30,8 @@ There are 30321 rows, 11 columns. There are Column types of both categorical and
 
 Raw Datasets:https://docs.google.com/spreadsheets/d/1O0iTVeiRXVc0ocy3vAIMzvwDGt5vVODN/edit?usp=sharing&ouid=107402225492318840480&rtpof=true&sd=true
 
+![rainbow](https://github.com/Winxent/portfolio/assets/146320825/5dc438d2-e138-4db0-97a0-e5ae8c3473e8)
+
 # Data Cleaning using Google BigQuery
 The below checklist is done for data cleaning using google BigQuery:
 * Dataset: airbnb
@@ -88,7 +90,7 @@ or Review_Scores_Rating is null
 8454 rows have null values
 Other columns have no null values
 
-1. Host_since and property_type is an important data for comparison, any missing value will be drop.
+2. Host_since and property_type is an important data for comparison, any missing value will be drop.
 ```
 DELETE FROM airbnb.rating
 WHERE host_since IS NULL;
@@ -97,22 +99,23 @@ WHERE host_since IS NULL;
 DELETE FROM airbnb.rating
 WHERE Property_Type IS NULL;
 ```
-2. Missing value on review rating should be remove in order for us to do analysis
+3. Missing value on review rating should be remove in order for us to do analysis
 ```
 DELETE FROM airbnb.rating
 WHERE Review_Scores_Rating IS NULL;
 ```
-3. Missing  value for beds will be replace with 0 (impute)
+4. Missing  value for beds will be replace with 0 (impute)
 ```
 update airbnb.rating
 set beds = 0
 where beds is null
 ```
-4. Missing values for zipcode will be deleted to prevent data being unable to compared
+5. Missing values for zipcode will be deleted to prevent data being unable to compared
 ```
 DELETE FROM airbnb.rating
 WHERE zipcode IS NULL;
 ```
+
 ##### C – Correct data formats
 no issue on the data type
 
@@ -124,6 +127,7 @@ Since there has already one rating column, rating_bin can be removed
 ALTER TABLE airbnb.rating
 DROP COLUMN review_scores_rating_bin;
 ```
+
 ##### E – Fix inconsistent data entry
 There is no inconsistent data entry
 
@@ -134,6 +138,7 @@ update airbnb.rating
 set name = trim(name)
 where true
 ```
+
 ##### G – Correct spelling errors
 no wrong spelling
 
@@ -144,8 +149,99 @@ after data cleaning:
 ![image5](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/fb629ca6-e44b-4c81-bb86-1eb7fbe2f0ab)
 https://drive.google.com/file/d/1DQq4wXDu7o6ElNkNMDfGRbXdoFE3BBm8/view?usp=sharing
 
+![rainbow](https://github.com/Winxent/portfolio/assets/146320825/5dc438d2-e138-4db0-97a0-e5ae8c3473e8)
 
+# Data Analysis (google Sheet)
+Data descriptive analysis strategies are used to analyse the dataset provided: 
 
+## 1. Data Aggregation:
+It helps describe the data, and generate insight from the characteristic of the data, 
+A customer might want to look into the hospitality of the airbnb in terms of review scoring, price, number of beds  and data should aggregate based on host.
+
+## 2. Summary Statistic:
+Summarized the large datasets into insightful numbers and gist of information about the data,
+We can understand the general situation, make decisions and monitor the changes.
+there are 3 types of summary statistics:
+
+### I. Measures of location:
+Mean (Average of a data set), Median (middle value of the data set), Mode (most repeated number)
+
+### II. Measures of spread:
+To understand the spread and distribution of data. and to find outliers.
+### III. Graphics and charts:
+Dash board.
+
+# Below are the SQL queries and their Solutions for the Data Analysis:
+## Data Description:
+In order to have a better data description we usually check the Shape and Size of our dataset along with the general description of datasets such as count, unique values etc.
+
+### 1. Check the Size of dataset
+```
+SELECT count (column_name)
+FROM portfolio-401502.airbnb.INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'rating';
+```
+This showed we had 9 columns
+```
+SELECT count (host_id)
+FROM airbnb.rating; 
+```
+22050 Rows in the dataset
+
+### 2. Check the metadata / Description of dataset
+```
+SELECT table_name, column_name, is_nullable, data_type, is_partitioning_column
+FROM portfolio-401502.airbnb.INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'rating';
+```
+<img width="956" alt="image4" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/1b6b2193-f82b-48be-a1fb-83e72074b18d">
+
+### 3. Check the subset of observations recorded in the dataset 
+```
+select * from airbnb.rating limit 10;
+```
+![image5](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9e50eaf7-7c7d-42a2-abf1-fc021e65f2ee)
+
+##  Data Aggregation 
+It helps us understand the data trends and values based on the compact display of values
+
+### 1. Check the unique values  alongwith the count of values for categorical columns
+
+#### Neighbourhood:
+```
+select Neighbourhood,count(Neighbourhood)as count
+from airbnb.rating
+group by rollup (Neighbourhood)
+order by count desc ;
+```
+<img width="383" alt="image15" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/fdafd6e0-eab4-4429-a436-24c932f73f18">
+
+#### Property:
+```
+select Property_Type,count(Property_Type)as count
+from airbnb.rating
+group by rollup (Property_Type)
+order by count desc ;
+```
+<img width="292" alt="image13" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/daae8ff9-311f-4edf-b00c-a21af9c9a13e">
+
+#### Room Type:
+```
+select Room_Type,count(Room_Type)as count
+from airbnb.rating3
+group by rollup (Room_Type)
+order by count desc ;
+```
+<img width="353" alt="image26" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/92ad4973-64b3-4ff5-8064-8bc5d2a87388">
+
+### 2. check the min and max of numerical columns 
+```
+SELECT min(beds) as beds_min, max(beds) as beds_max,
+min(Number_Of_Reviews) as Number_of_reviews_min, max(Number_Of_Reviews) as Number_of_reviews_max,
+min(Price) as price_min, max(Price) as price_max,
+min(Review_Scores_Rating) as Review_Scores_Rating_min, max(Review_Scores_Rating) as Review_Scores_Rating_max
+FROM airbnb.rating;
+```
 
 
 
