@@ -113,24 +113,37 @@ where beds is null
 DELETE FROM airbnb.rating
 WHERE zipcode IS NULL;
 ```
-
 ##### C – Correct data formats
-Change run_date to date time data type, others no issue
+no issue on the data type
+
+<img width="956" alt="image4" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/4150fd1b-be08-4732-88b9-0ba43381d246">
 
 ##### D – Drop irrelevant columns
-No irrelevant column
-
+Since there has already one rating column, rating_bin can be removed
+```
+ALTER TABLE airbnb.rating
+DROP COLUMN review_scores_rating_bin;
+```
 ##### E – Fix inconsistent data entry
-No inconsistent data entry
+There is no inconsistent data entry
 
 ##### F – Trim whitespaces
-Trimming some white spaces using google clean-up suggestion
-
+Trimming some white spaces trim function in google bigquery
+```
+update airbnb.rating
+set name = trim(name)
+where true
+```
 ##### G – Correct spelling errors
 no wrong spelling
 
 ##### H – Correct numerical errors
 no numerical errors
+
+after data cleaning:
+![image5](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/fb629ca6-e44b-4c81-bb86-1eb7fbe2f0ab)
+https://drive.google.com/file/d/1DQq4wXDu7o6ElNkNMDfGRbXdoFE3BBm8/view?usp=sharing
+
 
 
 
