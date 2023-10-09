@@ -171,7 +171,7 @@ To understand the spread and distribution of data. and to find outliers.
 ### III. Graphics and charts:
 Dash board.
 
-# Below are the SQL queries and their Solutions for the Data Analysis:
+# SQL queries and Solutions for the Data Analysis:
 ## Data Description:
 In order to have a better data description we usually check the Shape and Size of our dataset along with the general description of datasets such as count, unique values etc.
 
