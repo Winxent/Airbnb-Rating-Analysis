@@ -287,6 +287,51 @@ FROM airbnb.rating3;
 <img width="328" alt="image6" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/211307e7-816a-4029-b19d-71a0cbd4473c">
 Low deviation
 
+### 5. Creating temp tables with grouped information
+#### Property:
+```
+drop table if exists airbnb.groupby_property_type;
+Create table airbnb.groupby_property_type
+as
+(SELECT avg(Review_Scores_Rating) as review_Scores_rating, property_type FROM
+airbnb.rating3 group by Property_Type);
+select * from airbnb.groupby_property_type order by review_Scores_rating;
+```
+<img width="292" alt="image13" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/3e1b9a16-73ba-4e7c-9243-9c4dc21ac41f">
+Premium property type has higher rating and lower budget property has lower rating
+
+#### Neighbour:
+```
+drop table if exists airbnb.groupby_neighbourhood;
+Create table airbnb.groupby_neighbourhood
+as
+(SELECT avg(Review_Scores_Rating) as review_Scores_rating, Neighbourhood FROM
+airbnb.rating3 group by Neighbourhood);
+select * from airbnb.groupby_neighbourhood order by review_Scores_rating;
+```
+<img width="387" alt="image20" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/a37df7bd-abe5-42f4-9b8e-42cbadb63d4e">
+Bronx > Brooklyn > Manhattan > Queens > Staten Island
+
+#### Year:
+```
+SELECT
+EXTRACT(year FROM host_since) AS year,
+avg(review_scores_rating) AS review_scores_rating
+FROM airbnb.rating3
+GROUP BY EXTRACT(year FROM host_since);
+```
+<img width="310" alt="image7" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9c0dc8b8-51a4-46db-8771-ae48b86e5624">
+The longer the hosted period the higher the rating as host becomes more experienced.
+
+#### Room Type:
+```
+select Room_Type,avg(Review_Scores_Rating) as Review_scores_rating
+from airbnb.rating3
+group by (Room_Type);
+```
+<img width="347" alt="image1" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/d3d02fe1-e045-454b-9945-fbb30ea436c3">
+Entire house > Private room > Share room, Entire house brings more freedoom, space and privacy to customer hence it has a highest rating, follow up private room and shared room with the lowest rating with no privacy and less space.
+
 
 
 
