@@ -146,7 +146,7 @@ no wrong spelling
 no numerical errors
 
 after data cleaning:
-![image5](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/fb629ca6-e44b-4c81-bb86-1eb7fbe2f0ab)
+![image8](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/8f117987-9494-4d40-8013-703366f014b2)
 https://drive.google.com/file/d/1DQq4wXDu7o6ElNkNMDfGRbXdoFE3BBm8/view?usp=sharing
 
 ![rainbow](https://github.com/Winxent/portfolio/assets/146320825/5dc438d2-e138-4db0-97a0-e5ae8c3473e8)
@@ -242,6 +242,53 @@ min(Price) as price_min, max(Price) as price_max,
 min(Review_Scores_Rating) as Review_Scores_Rating_min, max(Review_Scores_Rating) as Review_Scores_Rating_max
 FROM airbnb.rating;
 ```
+![image11](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/910fb52f-879e-4308-b36d-dcfbf015e99a)
+
+## Data Summary 
+Summaries of data help us understand the detailed trends followed in datasets based on concise information using measures of location and spread 
+
+### 1. Summarize by mean values
+```
+select avg(beds) as Mean_Beds, avg(number_of_Reviews) as Mean_number_of_reviews, avg(price) as Mean_price,
+avg(review_scores_rating) as Mean_review_scores_Rating from airbnb.rating3;
+```
+<img width="683" alt="image25" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9608cc93-fb31-40db-b143-b670d683b805">
+Average price $155
+Average rating 92*
+
+### 2. Summarize by median
+```
+select PERCENTILE_CONT(beds,0.5) OVER() AS median_beds , PERCENTILE_CONT(Number_Of_Reviews,0.5) OVER() AS median_number_of_reviews,
+PERCENTILE_CONT(Price,0.5) OVER() AS median_price, PERCENTILE_CONT(Review_Scores_Rating,0.5) OVER() AS median_review_scores_rating
+from airbnb.rating3 limit 1;
+```
+<img width="683" alt="image25" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/555dabb4-3bc6-4c72-a949-45fa7c3b97aa">
+Median price $125
+Median rating 94*
+
+### 3. Summarize by mode 
+```
+SELECT
+APPROX_TOP_COUNT(beds,1) AS mode_beds, APPROX_TOP_COUNT(number_of_reviews,1) AS mode_number_of_reviews,
+APPROX_TOP_COUNT(price,1) AS mode_price, APPROX_TOP_COUNT(Review_Scores_Rating,1) AS mode_review_scores_rating
+from airbnb.rating3 limit 1
+```
+<img width="970" alt="image10" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/b079d84a-9d27-45b9-855e-cf78069fd448">
+Most of the Airbnb has only 1 bed with only 1 review.
+Majority of Airbnb the price is $150.
+Majority of Airbnb the rating is 100 perfect score.
+
+### 4. Stddev 
+```
+SELECT
+STDDEV(review_scores_rating) AS standard_deviation_review_scores_rating
+FROM airbnb.rating3;
+```
+<img width="328" alt="image6" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/211307e7-816a-4029-b19d-71a0cbd4473c">
+Low deviation
+
+
+
 
 
 
