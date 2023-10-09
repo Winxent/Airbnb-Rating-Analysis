@@ -332,6 +332,36 @@ group by (Room_Type);
 <img width="347" alt="image1" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/d3d02fe1-e045-454b-9945-fbb30ea436c3">
 Entire house > Private room > Share room, Entire house brings more freedoom, space and privacy to customer hence it has a highest rating, follow up private room and shared room with the lowest rating with no privacy and less space.
 
+### 6. Making quartiles by review_scores_rating
+```
+drop table if exists airbnb.IQR;
+Create table airbnb.IQR as (
+select PERCENTILE_CONT(Review_Scores_Rating,0.25) OVER() AS q1_review_scores_rating , PERCENTILE_CONT(Review_Scores_Rating,0.75) OVER() AS q3_review_sores_rating,
+(PERCENTILE_CONT(Review_Scores_Rating,0.75) OVER()) - (PERCENTILE_CONT(Review_Scores_Rating,0.25) OVER()) as IQR
+from airbnb.rating3 limit 1);
+```
+<img width="474" alt="image14" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9a269268-2093-4e2b-92e7-66650693ebe1">
+
+### 7. Dind max min of IQR
+```
+select (q1_review_scores_rating - (1.5 * IQR.IQR)) as minimum, (q3_review_scores_rating + (1.5* IQR.IQR)) as maximum from airbnb.IQR
+```
+<img width="311" alt="image17" src="https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9d69abab-75ca-4de7-b0d8-4fae40046fd1">
+
+### 8.Identify the outliers
+```
+select * from airbnb.rating3 where Review_Scores_Rating > 116.5 or Review_Scores_Rating < 72.5;
+```
+![image16](https://github.com/Winxent/Airbnb-Rating-Analysis/assets/146320825/9bd9c18f-3445-4fcc-a253-1cddf066a82a)
+667 outliers
+
+## Data Analysis Summary
+Base on airbnb review score rating’s mean median mode and quartile, there is an average of  92 review scores rating with a median of 94, slight negative skewness. Out of 30321, 5567 airbnb was able to perform well with a perfect score of 100. 667 airbnb are outliers with review scores rating lower than 72.5, it can be concluded that there are a few airbnb that performed very poorly. 
+
+From the few group by the information table, a few insights can be made.  Higher premium property chalet, castle and lighthouse have  a higher rating than the budget properties like camper and dorm. Host that has a longer serving period are also able to accumulate better review rating than others as they gain more hosting experience. 
+
+![rainbow](https://github.com/Winxent/portfolio/assets/146320825/5dc438d2-e138-4db0-97a0-e5ae8c3473e8)
+
 
 
 
