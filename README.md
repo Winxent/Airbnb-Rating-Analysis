@@ -30,27 +30,79 @@ There are 30321 rows, 11 columns. There are Column types of both categorical and
 
 Raw Datasets:https://docs.google.com/spreadsheets/d/1O0iTVeiRXVc0ocy3vAIMzvwDGt5vVODN/edit?usp=sharing&ouid=107402225492318840480&rtpof=true&sd=true
 
-# Data Cleaning
-The below checklist is done for data cleaning using (google sheet):
+# Data Cleaning using Google BigQuery
+The below checklist is done for data cleaning using google BigQuery:
 ##### A – Remove duplicate rows
-	Ans: There are no duplicate rows
+1. By typing the below quote in the query statement we can find how many rows we have.
+```
+select count(*) from airbnb.rating 
+```
+There are total or 30478 rows
+
+2. In order to find duplicates value:
+
+ ```  
+with host_idcte as
+(
+select *, row_number() over(partition by host_id,name,Host_Since,Neighbourhood_,Property_Type,Zipcode,Room_Type,beds,price,Room_Type,
+Number_of_Records,Number_Of_Reviews,Review_Scores_Rating,Review_Scores_Rating__bin_ order by host_id) as row_num
+from airbnb.rating
+)
+select * from host_idcte where row_num >1
+```
+17  duplicate row found
+
+3. Count distinct rows: 
+```
+select count(*)
+from
+(select distinct * from airbnb.rating)
+```
+30461  distinct rows
+
+4. Drop duplicate by creating a new table with only distinct rows
+```   
+CREATE OR REPLACE TABLE airbnb.rating1
+AS
+SELECT
+distinct*
+FROM airbnb.rating;
+drop table airbnb.rating;
+ALTER TABLE airbnb.rating1 RENAME TO rating;
+```
+
 ##### B – Handle missing values
-	Ans: There are no missing values
+1. check null values:
+```   
+select * from airbnb.rating
+where host_since is null
+or property_type is null
+or Review_Scores_Rating__bin_ is null
+or Zipcode is null
+or beds is null
+or Review_Scores_Rating is null
+```
+8454 rows have null values
+Other columns have no null values
+
+
 ##### C – Correct data formats
-	Ans: Change run_date to date time data type, others no issue
+Change run_date to date time data type, others no issue
+
 ##### D – Drop irrelevant columns
-	Ans: No irrelevant column
+No irrelevant column
+
 ##### E – Fix inconsistent data entry
-	Ans: No inconsistent data entry
+No inconsistent data entry
+
 ##### F – Trim whitespaces
+Trimming some white spaces using google clean-up suggestion
 
-  <img width="306" alt="image5" src="https://github.com/Winxent/Flight-Punctuality-Stats/assets/146320825/2a7e12e8-3d2e-4d21-9f81-39c4243f55e1">
-
-	Ans: Trimming some white spaces using google clean-up suggestion
 ##### G – Correct spelling errors
-	Ans: no wrong spelling
+no wrong spelling
+
 ##### H – Correct numerical errors
-	Ans: no numerical errors
+no numerical errors
 
 
 
